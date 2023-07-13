@@ -1,0 +1,24 @@
+{
+  "name": "reviews-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "db/seedData.js",
+  "scripts": {
+    "seeddb": "psql -U mr.lynes -d atelier -a -f db/schema.sql"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfp2305-cyclops/Reviews-API.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rfp2305-cyclops/Reviews-API/issues"
+  },
+  "homepage": "https://github.com/rfp2305-cyclops/Reviews-API#readme",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "pg": "^8.11.1"
+  }
+}
