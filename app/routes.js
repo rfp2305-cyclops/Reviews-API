@@ -1,5 +1,12 @@
 import Router from 'express-promise-router'
-import {getReviewMeta, getReviews} from './controller';
+import {
+  createReview,
+  getReviewMeta,
+  getReviews,
+  updateReview,
+  updateReviewHelpfulness,
+  updateReviewReport
+} from './controller';
 const router = new Router();
 
 /*
@@ -49,13 +56,19 @@ router.get('/reviews/meta', async (req, res, next) => {
     @name             -	text	        - Username for question asker
     @email            -	text	        - Email address for question asker
     @photos           -	[text]	      - Array of text urls that link to images to be shown
-    @characteristics  -	object	      - Object of keys representing characteristic_id and values representing the review value for that characteristic. { "14": 5, "15": 5 //...}
+    @characteristics  -	object	      - Object of keys representing characteristic_id and values
+                                        representing the review value for that characteristic. { "14": 5, "15": 5 //...}
 */
-router.post('/reviews', (req, res, next) => {
-
+router.post('/reviews', async (req, res, next) => {
+  const review = req.body;
+  try{
+    const result = await createReview(review);
+    res.send(result);
+  } catch(err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
 });
-
-
 
 
 
@@ -64,12 +77,17 @@ router.post('/reviews', (req, res, next) => {
   PARAMETERS
     @review_id	  - integer - Required ID of the review to update
 * */
-router.put('/reviews/:review_id/helpful', (req, res, next) => {
+router.put('/reviews/:review_id/helpful', async (req, res, next) => {
+  const {review_id} = req.params;
 
+  updateReviewHelpfulness(review_id)
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      res.sendStatus(500);
+    });
 });
-
-
-
 
 
 /*
@@ -77,8 +95,15 @@ router.put('/reviews/:review_id/helpful', (req, res, next) => {
   PARAMETERS
     @review_id    - integer - Required ID of the review to update
 */
-router.put('/reviews/:review_id/report', (req, res, next) => {
-
+router.put('/reviews/:review_id/report', async (req, res, next) => {
+  const {review_id} = req.params;
+  updateReviewReport(review_id)
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      res.sendStatus(500);
+    });
 });
 
 

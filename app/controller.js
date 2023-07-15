@@ -31,9 +31,6 @@ export async function getReviews(product_id, count=10, page=0, sort='asc') {
 }
 
 
-
-
-
 /*
 -- BRUTE FORCE SLOWEST DUMBEST SIMPLEST
     - fetch all product reviews
@@ -107,5 +104,62 @@ export async function getReviewMeta(product_id) {
     recommended,
     characteristics,
     product: product_id
+  }
+}
+
+export async function createReview(review) {
+  try {
+    const reviewInsertResult = await query(
+      `INSERT INTO review(product_id, rating, summary, body, recommend, reviewer_name, reviewer_email) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [review.product_id, review.rating, review.summary, review.body, review.recommend, review.name, review.email]
+    );
+    const insertId = reviewInsertResult.rows[0].id;
+
+    await Promise.all(review.photos.map((url) =>
+      query(
+        `INSERT INTO photo(review_id, url) VALUES($1, $2)`,
+        [insertId, url]
+      )
+    ));
+
+    await Promise.all(Object.keys(review.characteristics).map((key) =>
+      query(
+        `INSERT INTO characteristic_review(characteristic_id, review_id, value) VALUES($1, $2, $3)`,
+        [Number(key), insertId, review.characteristics[key]]
+      )
+    ));
+
+    return {insertId};
+  } catch(err) {
+    throw Error(err);
+  }
+}
+
+export async function updateReviewHelpfulness(review_id) {
+  try{
+    const result = await query(
+      `UPDATE review 
+            SET helpfulness = helpfulness + 1
+            WHERE id = $1
+      `, [review_id]
+    );
+
+    return result;
+  } catch(err) {
+    throw Error(err);
+  }
+}
+
+export async function updateReviewReport(review_id) {
+  try{
+    const result = await query(
+      `UPDATE review 
+            SET reported = true
+            WHERE id = $1
+      `, [review_id]
+    );
+    return result;
+  } catch(err) {
+    throw Error(err);
   }
 }
