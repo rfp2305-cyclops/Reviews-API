@@ -3,7 +3,6 @@ import {
   createReview,
   getReviewMeta,
   getReviews,
-  updateReview,
   updateReviewHelpfulness,
   updateReviewReport
 } from './controller';
@@ -42,8 +41,6 @@ router.get('/reviews/meta', async (req, res, next) => {
 
   res.send(queryResult);
 });
-
-
 
 
 /*

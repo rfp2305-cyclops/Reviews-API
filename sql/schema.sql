@@ -50,26 +50,26 @@ CREATE TABLE photo (
 );
 
 COPY review(id, product_id, rating, tmp_date, summary, body, recommend, reported, reviewer_name, reviewer_email, response, helpfulness)
-    FROM '/Users/mr.lynes/dev/HACK_REACTOR/cyclops/data_dump/test/reviews.csv'
+    FROM '/Users/mr.lynes/dev/HACK_REACTOR/cyclops/data_dump/reviews.csv'
     WITH (
         FORMAT csv,
         HEADER true
     );
 
 COPY characteristic
-    FROM '/Users/mr.lynes/dev/HACK_REACTOR/cyclops/data_dump/test/characteristics.csv'
+    FROM '/Users/mr.lynes/dev/HACK_REACTOR/cyclops/data_dump/characteristics.csv'
     WITH (
         FORMAT csv,
         HEADER true
     );
 COPY characteristic_review
-    FROM '/Users/mr.lynes/dev/HACK_REACTOR/cyclops/data_dump/test/characteristic_reviews.csv'
+    FROM '/Users/mr.lynes/dev/HACK_REACTOR/cyclops/data_dump/characteristic_reviews.csv'
     WITH (
         FORMAT csv,
         HEADER true
     );
 COPY photo
-    FROM '/Users/mr.lynes/dev/HACK_REACTOR/cyclops/data_dump/test/reviews_photos.csv'
+    FROM '/Users/mr.lynes/dev/HACK_REACTOR/cyclops/data_dump/reviews_photos.csv'
     WITH (
         FORMAT csv,
         HEADER true
