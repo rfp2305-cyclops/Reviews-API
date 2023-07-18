@@ -2,7 +2,7 @@
   "name": "reviews-api",
   "version": "1.0.0",
   "description": "",
-  "main": "sql/seedData.js",
+  "main": "app/index.js",
   "babel": {
     "presets": [
       "@babel/preset-env"
