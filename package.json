@@ -28,8 +28,7 @@
     "prod": "NODE_ENV=production npm-run-all build server",
     "transpile": "babel ./app --out-dir ./dist-server",
     "transpile:docker": "babel ./ --out-dir ./dist-server",
-    "clean": "rimraf ./dist-server",
-    "test": "k6 run test/loadTests/getReviewsMeta/api.load-test.js"
+    "clean": "rimraf ./dist-server"
   },
   "repository": {
     "type": "git",
