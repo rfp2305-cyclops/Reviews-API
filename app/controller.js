@@ -48,7 +48,10 @@ export async function getReviews(product_id, count=10, page=0, sort='asc') {
     ..........
 */
 
+
+
 export async function getReviewMeta(product_id) {
+
   const ratings = {
     "1": 0,
     "2": 0,
@@ -65,39 +68,33 @@ export async function getReviewMeta(product_id) {
     })
   });
 
-  const recommended = {
-    "true": 0,
-    "false" : 0
-  };
-  await query(
+  const recommended = await query(
     `SELECT COUNT(recommend), recommend FROM review WHERE product_id = $1 GROUP BY recommend`,
     [product_id]
-  ).then(({rows}) => {
-    rows.forEach(({recommend, count}) => {
-      recommended[recommend] = count;
-    })
-  });
+  ).then(({rows}) =>
+    rows.reduce((a, {recommend, count}) => {
+      a[String(recommend)] = Number(count);
+      return a;
+    }, {})
+  );
 
-  const characteristics = {};
-  await query(
-    `SELECT id, name FROM characteristic WHERE product_id = $1`,
-    [product_id]
-  ).then(({rows}) => {
-    rows.forEach((row) => {
-      characteristics[row.name] = {
-        id: row.id
-      };
-    })
-  });
-
-  await Promise.all(Object.keys(characteristics).map(async (key) => {
-    await query(
-      `SELECT value FROM characteristic_review WHERE characteristic_id = $1`,
-      [characteristics[key].id]
-    ).then((r) => {
-      characteristics[key].value = calculateAverageRating(r.rows);
-    })
-  }));
+  const characteristics = await query(`
+        SELECT char.id characteristic_id, name, ROUND(AVG(value), 4) AS average_value
+        FROM characteristic char
+        FULL JOIN characteristic_review char_rev 
+            ON char_rev.characteristic_id = char.id
+        WHERE product_id = $1
+        GROUP BY char.id, name;
+    `, [product_id]
+  ).then(({rows}) =>
+    rows.reduce((a, b) => {
+      a[b.name] = {
+        id: b.characteristic_id,
+        value:Number(b.average_value) || null
+      }
+      return a;
+    }, {})
+  );
 
   return {
     ratings,
