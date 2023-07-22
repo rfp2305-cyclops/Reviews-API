@@ -1,14 +1,14 @@
 require('dotenv').config();
 import express from 'express';
-import cors from 'cors'
-import router from './routes'
-import morgan from 'morgan'
+import cors from 'cors';
+import router from './routes';
+import morgan from 'morgan';
 
-export default function APP() {
+export default function APP(pid) {
   const app = express();
   app.set('port', process.env.SERVER_PORT);
+  app.set('pid', pid);
 
-// Logging and parsing
   app.use(morgan(
     process.env.NODE_ENV === 'development'
       ? 'dev'
@@ -19,7 +19,11 @@ export default function APP() {
 
   app.use(router());
   app.listen(app.get('port'), function () {
-    console.log('Listening on', app.get('port'));
+    let pid = app.get('pid');
+    console.log(
+      pid ? pid + ' ' : '',
+      'Listening on', app.get('port')
+    );
   });
 
   return app;

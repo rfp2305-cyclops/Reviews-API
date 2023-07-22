@@ -1,4 +1,4 @@
-import DB from './db';
+import {query} from './db';
 
 function calculateAverageRating(ratings) {
   const sum = ratings.length;
@@ -14,7 +14,6 @@ function calculateAverageRating(ratings) {
 */
 export async function getReviews(product_id, count=10, page=0, sort='asc') {
   try{
-    const query = DB();
     const res = await query(
       `SELECT * FROM review WHERE product_id = $1 LIMIT $2`,
       [product_id, count]
@@ -32,7 +31,6 @@ export async function getReviews(product_id, count=10, page=0, sort='asc') {
 }
 
 export async function getReviewMeta(product_id) {
-  const query = DB();
   const ratings = {
     "1": 0,
     "2": 0,
@@ -93,7 +91,6 @@ export async function getReviewMeta(product_id) {
 
 export async function createReview(review) {
   try {
-    const query = DB();
     const reviewInsertResult = await query(
       `INSERT INTO 
         review(product_id, rating, summary, body, recommend, reviewer_name, reviewer_email) 
@@ -124,7 +121,6 @@ export async function createReview(review) {
 
 export async function updateReviewHelpfulness(review_id) {
   try{
-    const query = DB();
     return await query(
       `UPDATE review
           SET helpfulness = helpfulness + 1
@@ -138,7 +134,6 @@ export async function updateReviewHelpfulness(review_id) {
 
 export async function updateReviewReport(review_id) {
   try{
-    const query = DB();
     return await query(
       `UPDATE review 
           SET reported = true

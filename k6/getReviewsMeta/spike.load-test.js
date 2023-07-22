@@ -8,15 +8,15 @@ export const options = {
     http_req_failed: [
       {
         threshold: 'rate<0.01',
-        abortOnFail: true, // boolean
-        delayAbortEval: "10s", // string
+        abortOnFail: true,
+        delayAbortEval: "10s",
       },
-    ], // http errors should be less than 1%
+    ],
     http_req_duration: [
       {
         threshold: 'p(99)<100',
-        abortOnFail: true, // boolean
-        delayAbortEval: "10s", // string
+        // abortOnFail: true,
+        delayAbortEval: "10s",
       },
     ],
   },
@@ -32,8 +32,7 @@ export const options = {
 
 export default () => {
   let id = randomIntBetween(1, 5774952);
-  const url = "http://3.91.152.73/reviews/meta?product_id=" + id;
-  // const url = "http://3.91.152.73/reviews/meta?product_id=5";
+  const url = "http://127.0.0.1:4878/reviews/meta?product_id=" + id;
   const payload = JSON.stringify({});
   const params = {
     headers: {

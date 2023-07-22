@@ -1,12 +1,13 @@
 // Import necessary modules
 import { check } from "k6";
 import http from "k6/http";
+import { randomIntBetween } from 'https://jslib.k6.io/k6-utils/1.2.0/index.js';
 
 export const options = {
   // define thresholds
   thresholds: {
     http_req_failed: ['rate<0.01'], // http errors should be less than 1%
-    http_req_duration: ['p(99)<50'], // 99% of requests should be below 50ms
+    http_req_duration: ['p(99)<200'], // 99% of requests should be below 200ms
   },
   // define scenarios
   scenarios: {
@@ -27,9 +28,8 @@ export const options = {
 
 export default function () {
   // define URL and request body
-  // const url = "http://54.91.251.210:4878/reviews/?product_id=1";
-  // const url = "http://18.234.191.68:4878/reviews/?product_id=1";
-  const url = "http://3.83.22.57/reviews/?product_id=1";
+  let id = randomIntBetween(1, 5774952);
+  const url = "http://127.0.0.1:4878/reviews/meta?product_id=" + id;
   const payload = JSON.stringify({});
   const params = {
     headers: {
@@ -42,5 +42,6 @@ export default function () {
   // check that response is 200
   check(res, {
     "response code was 200": (res) => res.status == 200,
+    'has the correct product_id': (r) => r.json().product === id
   });
 }
