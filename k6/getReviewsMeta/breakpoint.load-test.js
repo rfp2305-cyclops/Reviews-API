@@ -27,18 +27,15 @@ export const options = {
 
 export default function () {
   // define URL and request body
-  const url = "http://localhost:4878/reviews/?product_id=1";
-  const payload = JSON.stringify({
-    /*username: "test_case",
-    password: "1234",*/
-  });
+  const url = "http://3.91.152.73/reviews/?product_id=1";
+  const payload = JSON.stringify({});
   const params = {
     headers: {
       "Content-Type": "application/json",
     },
   };
 
-  const res = http.get(url, payload, params);
+  const res = http.get(url, params);
 
   // check that response is 200
   check(res, {

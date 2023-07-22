@@ -24,7 +24,7 @@
     "watch:dev": "nodemon",
     "build": "npm-run-all clean transpile",
     "server": "node ./dist-server/index.js",
-    "dev": "NODE_ENV=development npm-run-all build server",
+    "dev": "NODE_ENV=development TEST=script npm-run-all build server",
     "prod": "NODE_ENV=production npm-run-all build server",
     "transpile": "babel ./app --out-dir ./dist-server",
     "transpile:docker": "babel ./ --out-dir ./dist-server",

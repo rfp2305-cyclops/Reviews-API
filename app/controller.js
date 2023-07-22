@@ -1,5 +1,4 @@
-import {query} from './db';
-
+import DB from './db';
 
 function calculateAverageRating(ratings) {
   const sum = ratings.length;
@@ -15,6 +14,7 @@ function calculateAverageRating(ratings) {
 */
 export async function getReviews(product_id, count=10, page=0, sort='asc') {
   try{
+    const query = DB();
     const res = await query(
       `SELECT * FROM review WHERE product_id = $1 LIMIT $2`,
       [product_id, count]
@@ -27,28 +27,12 @@ export async function getReviews(product_id, count=10, page=0, sort='asc') {
     };
   } catch(err) {
     console.error(err);
+    throw new Error(err);
   }
 }
 
-
-/*
--- BRUTE FORCE SLOWEST DUMBEST SIMPLEST
-    - fetch all product reviews
-      - sum(reviews stars (1-5))
-    - fetch all product characteristics
-      - for each characteristic
-        - fetch all characteristic_reviews
-          - avg( each characteristic review )
-
--- CREATE TABLE PRODUCT_REVIEW_META
-    - store meta for each product
-    - update product_review_meta on review submission
-
--- SOME OTHER BRILLIANT METHOD TO SMART FOR ME
-    ..........
-*/
-
 export async function getReviewMeta(product_id) {
+  const query = DB();
   const ratings = {
     "1": 0,
     "2": 0,
@@ -109,8 +93,11 @@ export async function getReviewMeta(product_id) {
 
 export async function createReview(review) {
   try {
+    const query = DB();
     const reviewInsertResult = await query(
-      `INSERT INTO review(product_id, rating, summary, body, recommend, reviewer_name, reviewer_email) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      `INSERT INTO 
+        review(product_id, rating, summary, body, recommend, reviewer_name, reviewer_email) 
+        VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
       [review.product_id, review.rating, review.summary, review.body, review.recommend, review.name, review.email]
     );
     const insertId = reviewInsertResult.rows[0].id;
@@ -137,14 +124,13 @@ export async function createReview(review) {
 
 export async function updateReviewHelpfulness(review_id) {
   try{
-    const result = await query(
-      `UPDATE review 
-            SET helpfulness = helpfulness + 1
-            WHERE id = $1
+    const query = DB();
+    return await query(
+      `UPDATE review
+          SET helpfulness = helpfulness + 1
+          WHERE id = $1
       `, [review_id]
     );
-
-    return result;
   } catch(err) {
     throw Error(err);
   }
@@ -152,13 +138,13 @@ export async function updateReviewHelpfulness(review_id) {
 
 export async function updateReviewReport(review_id) {
   try{
-    const result = await query(
+    const query = DB();
+    return await query(
       `UPDATE review 
-            SET reported = true
-            WHERE id = $1
+          SET reported = true
+          WHERE id = $1
       `, [review_id]
     );
-    return result;
   } catch(err) {
     throw Error(err);
   }

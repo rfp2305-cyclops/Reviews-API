@@ -7,7 +7,7 @@ export const options = {
 };
 
 export default () => {
-  const url = "http://localhost:4878/reviews/?product_id=1";
+  const url = "http://3.80.220.94/reviews/?product_id=2";
   const payload = JSON.stringify({});
   const params = {
     headers: {

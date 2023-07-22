@@ -17,7 +17,7 @@ export const options = {
         // ramp up to average load of 20 virtual users
         { duration: "10s", target: 20 },
         // maintain load
-        { duration: "50s", target: 20 },
+        { duration: "50s", target: 100 },
         // ramp down to zero
         { duration: "5s", target: 0 },
       ],
@@ -27,9 +27,10 @@ export const options = {
 
 export default function () {
   // define URL and request body
-  const url = "http://localhost:4878/reviews/meta?product_id=1";
-  const payload = JSON.stringify({
-  });
+  // const url = "http://54.91.251.210:4878/reviews/?product_id=1";
+  // const url = "http://18.234.191.68:4878/reviews/?product_id=1";
+  const url = "http://3.83.22.57/reviews/?product_id=1";
+  const payload = JSON.stringify({});
   const params = {
     headers: {
       "Content-Type": "application/json",
